@@ -24,8 +24,20 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
     res.json({
         message: 'Welcome to the ME-API Playground Backend',
-        endpoints: ['/health', '/profile', '/projects', '/skills/top', '/search', '/seed-db'],
+        endpoints: ['/health', '/profile', '/projects', '/skills/top', '/search', '/seed-db', '/debug-paths'],
         status: 'running'
+    });
+});
+
+app.get('/debug-paths', (req, res) => {
+    res.json({
+        cwd: process.cwd(),
+        dirname: __dirname,
+        exists: {
+            prisma: require('fs').existsSync(path.join(process.cwd(), 'prisma')),
+            db: require('fs').existsSync(path.join(process.cwd(), 'prisma', 'dev.db')),
+            seed: require('fs').existsSync(path.join(process.cwd(), 'prisma', 'seed.js'))
+        }
     });
 });
 
