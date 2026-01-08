@@ -12,6 +12,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchInitialData();
@@ -20,15 +21,22 @@ function App() {
   const fetchInitialData = async () => {
     try {
       setLoading(true);
+      setError(null);
       const [profileRes, skillsRes] = await Promise.all([
         axios.get(`${API_BASE}/profile`),
         axios.get(`${API_BASE}/skills/top`)
       ]);
-      setProfile(profileRes.data);
-      setProjects(profileRes.data.projects || []);
-      setTopSkills(skillsRes.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+
+      if (profileRes.data) {
+        setProfile(profileRes.data);
+        setProjects(profileRes.data.projects || []);
+      } else {
+        setError('No profile data found. Please ensure the database is seeded.');
+      }
+      setTopSkills(skillsRes.data || []);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError(`Failed to connect to backend: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -74,6 +82,23 @@ function App() {
       <div className="empty-state">
         <Activity className="animate-pulse" />
         <p>Loading Playground...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="empty-state">
+        <div className="glass-card" style={{ padding: '2rem', textAlign: 'center' }}>
+          <h2 style={{ color: '#f87171' }}>Connection Error</h2>
+          <p style={{ margin: '1rem 0', color: '#94a3b8' }}>{error}</p>
+          <button
+            onClick={fetchInitialData}
+            className="btn btn-primary"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
