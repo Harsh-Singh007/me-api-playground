@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Search, Github, Linkedin, ExternalLink, Briefcase, GraduationCap, Code, Trophy, Activity } from 'lucide-react';
 import pic from './assets/pic.jpg';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '');
 
 function App() {
   const [profile, setProfile] = useState(null);
