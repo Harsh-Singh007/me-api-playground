@@ -19,9 +19,24 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
     res.json({
         message: 'Welcome to the ME-API Playground Backend',
-        endpoints: ['/health', '/profile', '/projects', '/skills/top', '/search'],
+        endpoints: ['/health', '/profile', '/projects', '/skills/top', '/search', '/seed-db'],
         status: 'running'
     });
+});
+
+// Seed trigger for production
+app.get('/seed-db', async (req, res) => {
+    try {
+        const { exec } = require('child_process');
+        exec('node prisma/seed.js', (error, stdout, stderr) => {
+            if (error) {
+                return res.status(500).json({ error: error.message });
+            }
+            res.json({ message: 'Seeding successful', output: stdout });
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // Get Profile

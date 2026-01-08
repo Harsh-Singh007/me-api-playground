@@ -36,7 +36,7 @@ function App() {
       setTopSkills(skillsRes.data || []);
     } catch (err) {
       console.error('Error fetching data:', err);
-      setError(`Failed to connect to backend: ${err.message}`);
+      setError(`Failed to connect to backend at ${API_BASE}. Error: ${err.message}`);
     } finally {
       setLoading(false);
     }
