@@ -1,8 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const { PrismaClient } = require('@prisma/client');
+const path = require('path');
 require('dotenv').config();
 
+// Fix for Prisma + SQLite on Vercel
+const dbPath = path.join(process.cwd(), 'prisma', 'dev.db');
+process.env.DATABASE_URL = `file:${dbPath}`;
+
+const { PrismaClient } = require('@prisma/client');
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000;
