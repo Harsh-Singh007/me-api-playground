@@ -30,13 +30,17 @@ app.get('/', (req, res) => {
 });
 
 app.get('/debug-paths', (req, res) => {
+    const fs = require('fs');
     res.json({
         cwd: process.cwd(),
         dirname: __dirname,
-        exists: {
-            prisma: require('fs').existsSync(path.join(process.cwd(), 'prisma')),
-            db: require('fs').existsSync(path.join(process.cwd(), 'prisma', 'dev.db')),
-            seed: require('fs').existsSync(path.join(process.cwd(), 'prisma', 'seed.js'))
+        exists_cwd: {
+            prisma: fs.existsSync(path.join(process.cwd(), 'prisma')),
+            db: fs.existsSync(path.join(process.cwd(), 'prisma', 'dev.db'))
+        },
+        exists_dirname: {
+            prisma: fs.existsSync(path.join(__dirname, 'prisma')),
+            db: fs.existsSync(path.join(__dirname, 'prisma', 'dev.db'))
         }
     });
 });
