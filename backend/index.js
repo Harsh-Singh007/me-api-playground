@@ -15,6 +15,15 @@ app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Root route
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Welcome to the ME-API Playground Backend',
+        endpoints: ['/health', '/profile', '/projects', '/skills/top', '/search'],
+        status: 'running'
+    });
+});
+
 // Get Profile
 app.get('/profile', async (req, res) => {
     try {
