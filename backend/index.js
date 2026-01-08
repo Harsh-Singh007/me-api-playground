@@ -4,7 +4,7 @@ const path = require('path');
 require('dotenv').config();
 
 // Fix for Prisma + SQLite on Vercel
-const dbPath = path.join(process.cwd(), 'prisma', 'dev.db');
+const dbPath = path.join(__dirname, 'prisma', 'dev.db');
 process.env.DATABASE_URL = `file:${dbPath}`;
 
 const { PrismaClient } = require('@prisma/client');
@@ -49,7 +49,8 @@ app.get('/debug-paths', (req, res) => {
 app.get('/seed-db', async (req, res) => {
     try {
         const { exec } = require('child_process');
-        exec('node prisma/seed.js', (error, stdout, stderr) => {
+        const seedPath = path.join(__dirname, 'prisma', 'seed.js');
+        exec(`node ${seedPath}`, (error, stdout, stderr) => {
             if (error) {
                 return res.status(500).json({ error: error.message });
             }
